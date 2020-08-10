@@ -5,12 +5,12 @@ const port = process.env.PORT || 5000;
 
 app.use(express.static(path.join(__dirname, "client-side/build")));
 
-app.get("/test", (req, res) => {
-  res.json({ test: "TEST is working!!!" });
-});
-
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "client-side/build/index.html"));
+});
+
+app.get("/test", (req, res) => {
+  res.send(JSON.parse({ test: "TEST is working!!!" }));
 });
 
 app.listen(port, () => {
