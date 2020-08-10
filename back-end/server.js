@@ -1,8 +1,12 @@
 const express = require("express");
 const path = require("path");
+const emailer = require("./emailer.js");
 const app = express();
 
-app.use(express.static(path.join(__dirname, "client-side/build")));
+app.use(express.static(path.join(__dirname, "front-end/build")));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(emailer);
 
 app.get("/getList", (req, res) => {
   var list = ["item1", "item2", "item3"];
@@ -11,7 +15,7 @@ app.get("/getList", (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname + "/client-side/build/index.html"));
+  res.sendFile(path.join(__dirname + "/front-end/build/index.html"));
 });
 
 const port = process.env.PORT || 5000;
