@@ -50,7 +50,6 @@ const emailContactInfo = (userInfo, response) => {
 
 router.post("/send", (req, res) => {
   let userInfo = req.body;
-  console.log("req-body->\n", userInfo);
   emailContactInfo(userInfo, res);
 });
 
