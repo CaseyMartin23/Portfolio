@@ -14,6 +14,8 @@ import Typography from "@material-ui/core/Typography";
 
 import { Form, Field } from "react-final-form";
 
+import CircularProgress from "@material-ui/core/CircularProgress";
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -87,8 +89,10 @@ type ContactProps = {} & WithStyles<typeof styles>;
 
 const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   const [emailSuccess, setEmailSuccess] = useState();
+  const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (values: any) => {
+  const onSubmit = (values: any, a: any) => {
+    setIsLoading(true);
     try {
       fetch("/send", {
         method: "POST",
@@ -97,8 +101,9 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
       })
         .then((res) => res.json())
         .then((data) => {
+          setIsLoading(false);
           setEmailSuccess(data.text);
-          console.log("Ping response->", data.text);
+          console.log("Response->", data.text);
         });
     } catch (err) {
       console.log(err);
@@ -112,7 +117,12 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           Let's Stay In Contact!!!
         </Typography>
       </Box>
-      {emailSuccess && <Box p={3}>{emailSuccess}</Box>}
+      {isLoading && (
+        <Box p={2}>
+          <CircularProgress />
+        </Box>
+      )}
+      {emailSuccess && <Box p={2}>{emailSuccess}</Box>}
       <div className={classes.formDiv}>
         <Paper className={classes.formPaperStyle}>
           <Form
