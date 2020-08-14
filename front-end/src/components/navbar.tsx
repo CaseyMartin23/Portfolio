@@ -27,15 +27,11 @@ const styles = (theme: Theme) =>
   });
 
 type NavbarUnstyledProps = {
-  value: number;
-  handleChange: (event: React.ChangeEvent<{}>, newValue: number) => void;
   handleThemeChange: () => void;
 } & WithStyles<typeof styles>;
 
 const NavbarUnstyled: React.FC<NavbarUnstyledProps> = ({
   classes,
-  value,
-  handleChange,
   handleThemeChange,
 }) => {
   return (

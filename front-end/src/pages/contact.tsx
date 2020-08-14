@@ -75,6 +75,7 @@ const styles = (theme: Theme) =>
       padding: "10px",
       borderRadius: "5px",
       border: "1px",
+      marginBottom: "20px",
     },
     submitButton: {
       backgroundColor: "red",
@@ -83,7 +84,22 @@ const styles = (theme: Theme) =>
         backgroundColor: "red",
       },
     },
+    formErrors: {
+      float: "left",
+      color: "red",
+    },
+    formField: {
+      marginBottom: "20px",
+    },
   });
+
+type FormValues = {
+  userFirstName: string;
+  userLastName: string;
+  userEmail: string;
+  emailSubject: string;
+  emailContent: string;
+};
 
 type ContactProps = {} & WithStyles<typeof styles>;
 
@@ -91,23 +107,24 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   const [emailSuccess, setEmailSuccess] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (values: any, a: any) => {
+  const onSubmit = (values: FormValues) => {
+    console.log("values->", values);
     setIsLoading(true);
-    try {
-      fetch("/send", {
-        method: "POST",
-        body: JSON.stringify(values),
-        headers: { "Content-Type": "application/json" },
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          setIsLoading(false);
-          setEmailSuccess(data.text);
-          console.log("Response->", data.text);
-        });
-    } catch (err) {
-      console.log(err);
-    }
+    // try {
+    //   fetch("/send", {
+    //     method: "POST",
+    //     body: JSON.stringify(values),
+    //     headers: { "Content-Type": "application/json" },
+    //   })
+    //     .then((res) => res.json())
+    //     .then((data) => {
+    setIsLoading(false);
+    //       setEmailSuccess(data.text);
+    //       console.log("Response->", data.text);
+    //     });
+    // } catch (err) {
+    //   console.log(err);
+    // }
   };
 
   return (
@@ -127,11 +144,26 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
         <Paper className={classes.formPaperStyle}>
           <Form
             onSubmit={onSubmit}
+            validate={(values) => {
+              const errors: any = {};
+
+              if (!values.userFirstName) {
+                errors.userFirstName = "This is required!";
+              }
+              if (!values.userLastName) {
+                errors.userLastName = "This is required!";
+              }
+              if (!values.userEmail) {
+                errors.userEmail = "This is required!";
+              }
+
+              return errors;
+            }}
             render={({ handleSubmit, form, submitting, pristine, values }) => (
               <form onSubmit={handleSubmit} style={{ width: "100%" }}>
                 <Field name="userFirstName">
                   {({ input, meta }) => (
-                    <div>
+                    <div className={classes.formField}>
                       <label className={classes.formLabel}>First Name:</label>
                       <input
                         {...input}
@@ -139,13 +171,15 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
                         className={classes.formInputs}
                         placeholder="Please enter your first name here..."
                       />
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                      {meta.error && meta.touched && (
+                        <span className={classes.formErrors}>{meta.error}</span>
+                      )}
                     </div>
                   )}
                 </Field>
                 <Field name="userLastName">
                   {({ input, meta }) => (
-                    <div>
+                    <div className={classes.formField}>
                       <label className={classes.formLabel}>Last Name:</label>
                       <input
                         {...input}
@@ -153,13 +187,15 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
                         className={classes.formInputs}
                         placeholder="Please enter your last name here..."
                       />
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                      {meta.error && meta.touched && (
+                        <span className={classes.formErrors}>{meta.error}</span>
+                      )}
                     </div>
                   )}
                 </Field>
                 <Field name="userEmail">
                   {({ input, meta }) => (
-                    <div>
+                    <div className={classes.formField}>
                       <label className={classes.formLabel}>
                         Email-address:
                       </label>
@@ -169,13 +205,15 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
                         className={classes.formInputs}
                         placeholder="Please enter your email e.g. your@email.com"
                       />
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                      {meta.error && meta.touched && (
+                        <span className={classes.formErrors}>{meta.error}</span>
+                      )}
                     </div>
                   )}
                 </Field>
                 <Field name="emailSubject">
                   {({ input, meta }) => (
-                    <div>
+                    <div className={classes.formField}>
                       <label className={classes.formLabel}>Subject:</label>
                       <textarea
                         {...input}
@@ -184,13 +222,15 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
                         maxLength={100}
                         placeholder="Please enter your Subject e.g. What do you want to talk about?"
                       />
-                      {meta.error && meta.touched && <span>{meta.error}</span>}
+                      {meta.error && meta.touched && (
+                        <span className={classes.formErrors}>{meta.error}</span>
+                      )}
                     </div>
                   )}
                 </Field>
                 <Field name="emailContent">
                   {({ input, meta }) => (
-                    <div>
+                    <div className={classes.formField}>
                       <label className={classes.formLabel}>
                         Please tell me what you think of my profile:
                       </label>

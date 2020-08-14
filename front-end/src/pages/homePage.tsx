@@ -91,11 +91,9 @@ const styles = (theme: Theme) =>
     },
   });
 
-type HomeProps = {
-  onLinkClick: (event: React.ChangeEvent<{}>, value: number) => void;
-} & WithStyles<typeof styles>;
+type HomeProps = {} & WithStyles<typeof styles>;
 
-const HomeUnstyled: React.FC<HomeProps> = ({ classes, onLinkClick }) => {
+const HomeUnstyled: React.FC<HomeProps> = ({ classes }) => {
   return (
     <div className={classes.root}>
       <div id="openningHeader" className={classes.openningHeader}>

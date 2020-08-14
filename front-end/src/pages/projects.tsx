@@ -45,11 +45,12 @@ const ProjectsUnstyled: React.FC<ProjectsProps> = ({ classes }) => {
           <div className={classes.paragrahs}>
             <Typography variant="h6" id="about">
               Due to my internship that I've been so lucky to be a part of! This
-              made time for my profile and personal projects less then nothing
+              made time for my profile and personal projects less then I'd like.
               <br />
-              But dont not fear, because Casey is here!!!
-              <br />I plan to work on one project at a time and then updating my
-              profile with the new project.
+              But don't not fear, Casey is here!!!
+              <br />
+              And I plan to work on one project at a time and then updating my
+              profile with the new project and show off my skills!
             </Typography>
           </div>
         </Box>

@@ -24,10 +24,10 @@ const styles = (theme: Theme) =>
 type ProfileProps = {} & WithStyles<typeof styles>;
 
 const ProfileUnstyled: React.FC<ProfileProps> = ({ classes }) => {
-  const [value, setValue] = useState(0);
   const [darkState, setDarkState] = useState(false);
   const palletType = darkState ? "dark" : "light";
   const paperBackGroundColor = darkState ? "#2f404a" : "#535759";
+  const backgroundColor = darkState ? "#25292e" : "#f5f5f5";
   const textThemeColor = "#ffffff";
 
   const darkTheme = createMuiTheme({
@@ -49,38 +49,50 @@ const ProfileUnstyled: React.FC<ProfileProps> = ({ classes }) => {
     },
   });
 
-  const bodyBackgroundColor = () => {
-    const bodyTag = document.getElementById("body");
-    if (bodyTag && darkState) {
-      bodyTag.style.backgroundColor = "#25292e";
-    } else if (bodyTag && !darkState) {
-      bodyTag.style.backgroundColor = "#f5f5f5";
+  useEffect(() => {
+    console.log("darkState->>", darkState);
+    checkThemeColor();
+    bodyBackgroundColor();
+  }, [darkState]);
+
+  const checkThemeColor = () => {
+    const themeStorage = localStorage.getItem("darkState");
+
+    if (!themeStorage) {
+      localStorage.setItem("darkState", palletType);
+    } else if (themeStorage === "dark") {
+      setDarkState(true);
+    } else if (themeStorage === "light") {
+      setDarkState(false);
     }
   };
 
-  useEffect(() => {
-    bodyBackgroundColor();
-  });
-
-  const handleThemeChange = () => {
-    setDarkState(!darkState);
+  const bodyBackgroundColor = () => {
+    const bodyTag: HTMLElement = document.getElementsByTagName(
+      "body"
+    )[0] as HTMLElement;
+    if (bodyTag) {
+      bodyTag.style.backgroundColor = backgroundColor;
+    }
   };
 
-  const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
-    setValue(newValue);
+  const handleThemeChange = () => {
+    if (darkState) {
+      setDarkState(false);
+      localStorage.setItem("darkState", "light");
+    } else if (!darkState) {
+      setDarkState(true);
+      localStorage.setItem("darkState", "dark");
+    }
   };
 
   return (
     <>
       <ThemeProvider theme={darkTheme}>
-        <Navbar
-          handleChange={handleChange}
-          handleThemeChange={handleThemeChange}
-          value={value}
-        />
+        <Navbar handleThemeChange={handleThemeChange} />
         <Switch>
           <Route exact path="/">
-            <Home onLinkClick={handleChange} />
+            <Home />
           </Route>
           <Route path="/skills">
             <Skills />
