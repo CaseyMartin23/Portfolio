@@ -110,21 +110,21 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   const onSubmit = (values: FormValues) => {
     console.log("values->", values);
     setIsLoading(true);
-    // try {
-    //   fetch("/send", {
-    //     method: "POST",
-    //     body: JSON.stringify(values),
-    //     headers: { "Content-Type": "application/json" },
-    //   })
-    //     .then((res) => res.json())
-    //     .then((data) => {
-    setIsLoading(false);
-    //       setEmailSuccess(data.text);
-    //       console.log("Response->", data.text);
-    //     });
-    // } catch (err) {
-    //   console.log(err);
-    // }
+    try {
+      fetch("/send", {
+        method: "POST",
+        body: JSON.stringify(values),
+        headers: { "Content-Type": "application/json" },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setIsLoading(false);
+          setEmailSuccess(data.text);
+          console.log("Response->", data.text);
+        });
+    } catch (err) {
+      console.log(err);
+    }
   };
 
   return (
