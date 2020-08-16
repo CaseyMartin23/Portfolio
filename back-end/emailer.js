@@ -13,7 +13,7 @@ const emailContactInfo = (userInfo, response) => {
       Surname: ${userInfo.userLastName}
       Email: ${userInfo.userEmail}
 
-  ${userInfo.emailContent}
+${userInfo.emailContent}
   `;
 
   const transporter = nodemailer.createTransport({
