@@ -104,10 +104,11 @@ type FormValues = {
 type ContactProps = {} & WithStyles<typeof styles>;
 
 const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
-  const [emailSuccess, setEmailSuccess] = useState();
+  const [emailSuccess, setEmailSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = (values: FormValues) => {
+    setEmailSuccess("");
     console.log("values->", values);
     setIsLoading(true);
     try {
@@ -139,7 +140,7 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           <CircularProgress />
         </Box>
       )}
-      {emailSuccess && <Box p={2}>{emailSuccess}</Box>}
+      {emailSuccess.length > 0 && <Box p={2}>{emailSuccess}</Box>}
       <div className={classes.formDiv}>
         <Paper className={classes.formPaperStyle}>
           <Form
