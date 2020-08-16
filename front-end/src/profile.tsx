@@ -50,7 +50,6 @@ const ProfileUnstyled: React.FC<ProfileProps> = ({ classes }) => {
   });
 
   useEffect(() => {
-    console.log("darkState->>", darkState);
     checkThemeColor();
     bodyBackgroundColor();
   }, [darkState]);

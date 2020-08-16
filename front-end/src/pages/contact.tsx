@@ -5,6 +5,7 @@ import {
   Theme,
   WithStyles,
   createStyles,
+  ThemeProvider,
 } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
@@ -91,6 +92,11 @@ const styles = (theme: Theme) =>
     formField: {
       marginBottom: "20px",
     },
+    emailSuccessMessage: {
+      color: theme.palette.primary.light,
+      fontWeight: "bold",
+      fontSize: "20px",
+    },
   });
 
 type FormValues = {
@@ -107,14 +113,11 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   const [emailSuccess, setEmailSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = (values: FormValues) => {
-    setEmailSuccess("");
-    console.log("values->", values);
-    setIsLoading(true);
+  const sendEmail = (emailContent: FormValues) => {
     try {
       fetch("/send", {
         method: "POST",
-        body: JSON.stringify(values),
+        body: JSON.stringify(emailContent),
         headers: { "Content-Type": "application/json" },
       })
         .then((res) => res.json())
@@ -128,6 +131,12 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
     }
   };
 
+  const onSubmit = (values: FormValues) => {
+    setEmailSuccess("");
+    setIsLoading(true);
+    sendEmail(values);
+  };
+
   return (
     <div className={classes.root}>
       <Box p={3}>
@@ -135,12 +144,7 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           Let's Stay In Contact!!!
         </Typography>
       </Box>
-      {isLoading && (
-        <Box p={2}>
-          <CircularProgress />
-        </Box>
-      )}
-      {emailSuccess.length > 0 && <Box p={2}>{emailSuccess}</Box>}
+
       <div className={classes.formDiv}>
         <Paper className={classes.formPaperStyle}>
           <Form
@@ -256,6 +260,16 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           />
         </Paper>
       </div>
+      {isLoading && (
+        <Box p={2}>
+          <CircularProgress />
+        </Box>
+      )}
+      {emailSuccess.length > 0 && (
+        <Box className={classes.emailSuccessMessage} p={3}>
+          {emailSuccess}
+        </Box>
+      )}
     </div>
   );
 };
