@@ -5,7 +5,6 @@ import {
   Theme,
   WithStyles,
   createStyles,
-  ThemeProvider,
 } from "@material-ui/core/styles";
 
 import Paper from "@material-ui/core/Paper";
@@ -39,6 +38,7 @@ const styles = (theme: Theme) =>
       backgroundColor: "#cad9db",
       padding: "20px",
       marginBottom: "50px",
+      width: "550px",
     },
     form: {
       padding: "10px",
@@ -88,6 +88,7 @@ const styles = (theme: Theme) =>
     formErrors: {
       float: "left",
       color: "red",
+      padding: "0px",
     },
     formField: {
       marginBottom: "20px",
@@ -96,6 +97,11 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.light,
       fontWeight: "bold",
       fontSize: "20px",
+    },
+    loadingCirlce: {
+      "&:focus": {
+        outline: "0",
+      },
     },
   });
 
@@ -113,6 +119,13 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   const [emailSuccess, setEmailSuccess] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
+  const focusOnLoading = () => {
+    const loadingDiv = document.getElementById("loadingAndSuccess");
+    if (loadingDiv) {
+      loadingDiv.focus();
+    }
+  };
+
   const sendEmail = (emailContent: FormValues) => {
     try {
       fetch("/send", {
@@ -122,9 +135,9 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
       })
         .then((res) => res.json())
         .then((data) => {
-          setIsLoading(false);
           setEmailSuccess(data.text);
           console.log("Response->", data.text);
+          setIsLoading(false);
         });
     } catch (err) {
       console.log(err);
@@ -132,8 +145,9 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
   };
 
   const onSubmit = (values: FormValues) => {
-    setEmailSuccess("");
     setIsLoading(true);
+    setEmailSuccess("");
+    focusOnLoading();
     sendEmail(values);
   };
 
@@ -144,6 +158,23 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           Let's Stay In Contact!!!
         </Typography>
       </Box>
+
+      <div
+        className={classes.loadingCirlce}
+        id="loadingAndSuccess"
+        tabIndex={0}
+      >
+        {isLoading && (
+          <Box p={2}>
+            <CircularProgress />
+          </Box>
+        )}
+        {emailSuccess.length > 0 && (
+          <Box className={classes.emailSuccessMessage} p={3}>
+            {emailSuccess}
+          </Box>
+        )}
+      </div>
 
       <div className={classes.formDiv}>
         <Paper className={classes.formPaperStyle}>
@@ -158,8 +189,14 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
               if (!values.userLastName) {
                 errors.userLastName = "This is required!";
               }
+
+              const emailReg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
               if (!values.userEmail) {
                 errors.userEmail = "This is required!";
+              }
+              if (!emailReg.test(values.userEmail)) {
+                errors.userEmail = "Enter valid email-address";
               }
 
               return errors;
@@ -260,16 +297,6 @@ const ContactUnstyled: React.FC<ContactProps> = ({ classes }) => {
           />
         </Paper>
       </div>
-      {isLoading && (
-        <Box p={2}>
-          <CircularProgress />
-        </Box>
-      )}
-      {emailSuccess.length > 0 && (
-        <Box className={classes.emailSuccessMessage} p={3}>
-          {emailSuccess}
-        </Box>
-      )}
     </div>
   );
 };
